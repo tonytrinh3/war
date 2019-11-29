@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+<style>
+
+    * {
+        font-family: 'Roboto', sans-serif;
+    }
+    body{
+        background-color: green;
+    }
+
+    h1{
+        font-weight: 700;
+    }
+
+    p{
+        font-weight: 400;
+    }
+
+ 
+    .players-card{
+        display: block;
+    }
+
+    .players-card__card {
+        border: none;
+        outline: none;
+        background-color: green;
+      
+    }
+
+    .players-card__player-2{
+        display: block;
+    }
+
+    .turn {
+        display: inline-block;
+        margin-top: 2em;
+        margin-left: 1em;
+    }
+
+
+    .showdown{
+        display: inline-block;
+        margin-top: 2em;
+        margin-left: 1em;
+    }
+
+    .showdown__button{
+
+        display: none;
+
+    }
+
+    .user-button{
+        border-radius: 10px;
+        border:none;
+        background-color: #001f3f;
+        color: white;
+        font-weight: 400;
+        font-size: 14px;
+        text-align: center;
+        text-decoration: none;
+        padding: 50px 100px;
+       
+    
+    }
+
+    .winner{
+        font-size: 4em;
+        color: red;
+        display: none;
+
+    }
+
+</style>
+<body>
+    <div class="players-card">
+        <div class="players-card__player-1">
+            <h1>Player One</h1>
+            <h1 class = "winner">Player One has won</h1>
+        </div>
+        <br/>
+        <div class="players-card__player-2">
+            <h1>Player Two</h1>
+        </div>
+    </div>
+
+    <div class="war">
+        <button class= "user-button war__button">Time to go to War</button>
+    </div>
+
+    <!-- <div class="showdown">
+        <button class= "user-button showdown__button">Showdown!</button>
+    </div> -->
+
+<script type="text/javascript" src="index.js"></script></body>
+
+</html>
