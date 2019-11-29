@@ -71,18 +71,33 @@ const getDeckOfCards = async () => {
 
         const cardNumber = (cardCode) =>{
             const splitCardCode= cardCode.split("");
-            return splitCardCode[0];
+            const cardNumTemp= splitCardCode[0];
+            if (cardNumTemp === "A"){
+                return 14;
+            } else if (cardNumTemp === "K"){
+                return 13;
+            } else if (cardNumTemp === "Q"){
+                return 12;
+            } else if (cardNumTemp === "J"){
+                return 11;
+            } else if (cardNumTemp === "0"){
+                return 10;
+            } else {
+                return cardNumTemp;
+            }
+
               
         };
 
-        console.log(cardNumber(state.playerOneDeck[0].code));
 
         const compareCards = (playerOneCard,playerTwoCard) => {
             if (cardNumber(playerOneCard) > cardNumber(playerTwoCard)){
-                state.playerOnePile.push(playerTwoCard);//add card won onto pile for future use in deck api 
+                state.playerOnePile.push(playerOneCard,playerTwoCard);//add card won onto pile for future use in deck api
+                state.playerOneDeck.splice(0,1);//removes card from player one deck bc it is already in pile 
                 state.playerTwoDeck.splice(0,1);//removes card from player two deck bc they lost
             } else if (cardNumber(playerTwoCard) > cardNumber(playerOneCard)){
-                state.playerTwoPile.push(playerOneCard);
+                state.playerTwoPile.push(playerTwoCard,playerOneCard);
+                state.playerTwoDeck.splice(0,1);//removes card from player one deck bc it is already in pile 
                 state.playerOneDeck.splice(0,1);
             }
         };
