@@ -16,10 +16,10 @@ const getDeckOfCards = async () => {
 
         //this is an array of 5 
         const playerOne = await(await fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/draw/?count=${52/2}`)).json();
-        console.log(playerOne);
+       
         
         const playerTwo= await(await fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/draw/?count=${52/2}`)).json();
-        console.log(playerTwo);
+       
 
         // const handArray = (playersCards) => {
         //     const cardsArray = playersCards.map((curEl)=>{
@@ -33,7 +33,7 @@ const getDeckOfCards = async () => {
     
 
         state.playerOneDeck = playerOne.cards;
-        console.log(state.playerOneCards);
+        console.log(state.playerOneDeck);
  
         state.playerTwoDeck = playerTwo.cards;
 
@@ -64,6 +64,11 @@ const getDeckOfCards = async () => {
 
         };
 
+        const playerOnePile = [];
+        state.playerOnePile = playerOnePile;
+        const playerTwoPile = [];
+        state.playerTwoPile = playerTwoPile;
+
         const cardNumber = (cardCode) =>{
             const splitCardCode= cardCode.split("");
             return splitCardCode[0];
@@ -73,8 +78,13 @@ const getDeckOfCards = async () => {
         console.log(cardNumber(state.playerOneDeck[0].code));
 
         const compareCards = (playerOneCard,playerTwoCard) => {
-
-
+            if (cardNumber(playerOneCard) > cardNumber(playerTwoCard)){
+                state.playerOnePile.push(playerTwoCard);//add card won onto pile for future use in deck api 
+                state.playerTwoDeck.splice(0,1);//removes card from player two deck bc they lost
+            } else if (cardNumber(playerTwoCard) > cardNumber(playerOneCard)){
+                state.playerTwoPile.push(playerOneCard);
+                state.playerOneDeck.splice(0,1);
+            }
         };
 
   
@@ -158,6 +168,14 @@ const getDeckOfCards = async () => {
             }
             `;
             document.head.appendChild(style);
+
+            compareCards(state.playerOneDeck[0].code,state.playerTwoDeck[0].code);
+            
+            console.log(state.playerOneDeck);
+            console.log(state.playerOnePile);
+            console.log(state.playerTwoDeck);
+            console.log(state.playerTwoPile);
+
            
     
         });
