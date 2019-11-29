@@ -45,7 +45,7 @@ const getDeckOfCards = async () => {
         
         const renderCard = (cards,playerNumber) =>{
             
-                const displayCard = `<img src = ${cards[0].image} alt = ${cards[0].code}/>`;
+                const displayCard = `<img class = "card--${playerNumber}" src = ${cards[0].image} alt = ${cards[0].code}/>`;
 
                 // const cardIndex = (playerNumber*10)+index+1;
 
@@ -163,36 +163,69 @@ const getDeckOfCards = async () => {
         // }
        
         
-
+        let count = 0;
         document.querySelector(`.war__button`).addEventListener('click', () =>{
-            renderCard(state.playerOneDeck,1);
-            renderCard(state.playerTwoDeck,2);
-            let style = document.createElement('style');
-            style.innerHTML = `
 
+            if (count ===0 ){
 
-            .players-card__player-2{
-                display: block;
-                }
-            .turn__button{
-                display: none;
-            }
-            .showdown__button {
-                display: inline-block;
-                background-color: #FF4136;
-            }
-            `;
-            document.head.appendChild(style);
-
-            compareCards(state.playerOneDeck[0].code,state.playerTwoDeck[0].code);
-            
-            console.log(state.playerOneDeck);
-            console.log(state.playerOnePile);
-            console.log(state.playerTwoDeck);
-            console.log(state.playerTwoPile);
-
-           
+                renderCard(state.playerOneDeck,1);
+                renderCard(state.playerTwoDeck,2);
+                let style = document.createElement('style');
+                style.innerHTML = `
     
+    
+                .players-card__player-2{
+                    display: block;
+                    }
+                .turn__button{
+                    display: none;
+                }
+                .showdown__button {
+                    display: inline-block;
+                    background-color: #FF4136;
+                }
+                `;
+                document.head.appendChild(style);
+    
+                compareCards(state.playerOneDeck[0].code,state.playerTwoDeck[0].code);
+
+                count++;
+            } else {
+                const el1 = document.querySelector(`.card--1`);
+                const el2 = document.querySelector(`.card--2`);
+                //https://www.w3schools.com/jsref/met_node_removechild.asp
+          
+                el1.parentElement.removeChild(el1);
+                el2.parentElement.removeChild(el2);
+
+                renderCard(state.playerOneDeck,1);
+                renderCard(state.playerTwoDeck,2);
+                let style = document.createElement('style');
+                style.innerHTML = `
+    
+    
+                .players-card__player-2{
+                    display: block;
+                    }
+                .turn__button{
+                    display: none;
+                }
+                .showdown__button {
+                    display: inline-block;
+                    background-color: #FF4136;
+                }
+                `;
+                document.head.appendChild(style);
+    
+                compareCards(state.playerOneDeck[0].code,state.playerTwoDeck[0].code);
+                
+                console.log(state.playerOneDeck);
+                console.log(state.playerOnePile);
+                console.log(state.playerTwoDeck);
+                console.log(state.playerTwoPile);
+
+
+            }
         });
 
     
