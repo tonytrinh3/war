@@ -8,7 +8,7 @@ const state = {};
 // const fetchAsyncA = async () => await (await fetch('https://api.github.com')).json()
 // https://gist.github.com/msmfsd/fca50ab095b795eb39739e8c4357a808
 
-const getDeckOfCards = async () => {
+const playWar = async () => {
     try{
         const result = await fetch('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1');
         const data = await result.json();
@@ -16,36 +16,27 @@ const getDeckOfCards = async () => {
 
         //this is an array of 5 
         const playerOne = await(await fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/draw/?count=${52/2}`)).json();
-       
+       console.log(playerOne.cards);
         
         const playerTwo= await(await fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/draw/?count=${52/2}`)).json();
        
 
-        // const handArray = (playersCards) => {
-        //     const cardsArray = playersCards.map((curEl)=>{
-        //       return pokerSolverConversion(curEl.code);
-              
-        //     })
-        //     return cardsArray;
-        // };
-
-
-    
 
         state.playerOneDeck = playerOne.cards;
-        console.log(state.playerOneDeck);
+        console.log(state.playerOneDeck[0]);
  
         state.playerTwoDeck = playerTwo.cards;
+        console.log( state.playerTwoDeck );
 
     
 
-        //https://stackoverflow.com/questions/33846682/react-onclick-function-fires-on-render/33846747
+        //https://stackoverflow.com/questions/33846682/react-onclic,k-function-fires-on-render/33846747
         //Because you are calling that function instead of passing the function to onClick, change that line to this:
 
         
-        const renderCard = (cards,playerNumber) =>{
+        const renderCard = (card, playerNumber) =>{
             
-                const displayCard = `<img class = "card--${playerNumber}" src = ${cards[0].image} alt = ${cards[0].code}/>`;
+                const displayCard = `<img class = "card--${playerNumber}" src = ${card.image} alt = ${card.code}/>`;
 
                 // const cardIndex = (playerNumber*10)+index+1;
 
@@ -99,13 +90,76 @@ const getDeckOfCards = async () => {
                 state.playerTwoPile.push(playerTwoCard,playerOneCard);
                 state.playerTwoDeck.splice(0,1);//removes card from player one deck bc it is already in pile 
                 state.playerOneDeck.splice(0,1);
-            }
+            } 
         };
 
-  
+
+        const dummy = () =>{
+            renderCard(state.playerOneDeck[0], 1);
+            renderCard(state.playerTwoDeck[0], 2);
 
 
-            //receives the cards array from json, cardindex that is relevant to changing the card, and player number
+
+            let style = document.createElement('style');
+            style.innerHTML = `
+            .players-card__player-2{
+                display: block;
+                }
+            .turn__button{
+                display: none;
+            }
+            .showdown__button {
+                display: inline-block;
+                background-color: #FF4136;
+            }
+            `;
+            document.head.appendChild(style);
+
+            if (cardNumber(state.playerOneDeck[0].code) !== cardNumber(state.playerTwoDeck[0].code)){
+                compareCards(state.playerOneDeck[0].code,state.playerTwoDeck[0].code);
+            } else if (cardNumber(state.playerOneDeck[0].code) === cardNumber(state.playerTwoDeck[0].code)){
+                renderCard(state.playerOneDeck[0], 1);
+                renderCard(state.playerTwoDeck[0], 2);
+            }
+
+            
+            console.log(state.playerOneDeck);
+            console.log(state.playerOnePile);
+            console.log(state.playerTwoDeck);
+            console.log(state.playerTwoPile);
+
+
+        }
+
+        document.querySelector(`.war__button`).addEventListener('click', () =>{
+            const el1 = document.querySelector(`.card--1`);
+            const el2 = document.querySelector(`.card--2`);
+
+            if (el1 && el2){
+                //https://www.w3schools.com/jsref/met_node_removechild.asp
+          
+                el1.parentElement.removeChild(el1);
+                el2.parentElement.removeChild(el2);
+
+                dummy();
+               
+            } else {
+
+                dummy();
+
+            }
+        });
+
+    
+    } catch (error){
+        alert(error);
+    }
+    
+};
+
+playWar();
+
+           //receives the cards array from json, cardindex that is relevant to changing the card, and player number
         // const renderNewCard = (cards, index, playerNumber)=>{
         //     //render new card
         //     const cardIndex = (playerNumber*10)+index+1;
@@ -161,79 +215,3 @@ const getDeckOfCards = async () => {
         // if (state.playerOneDeck[0]>state.playerTwoDeck[0]){
             
         // }
-       
-        
-        let count = 0;
-        document.querySelector(`.war__button`).addEventListener('click', () =>{
-
-            if (count ===0 ){
-
-                renderCard(state.playerOneDeck,1);
-                renderCard(state.playerTwoDeck,2);
-                let style = document.createElement('style');
-                style.innerHTML = `
-    
-    
-                .players-card__player-2{
-                    display: block;
-                    }
-                .turn__button{
-                    display: none;
-                }
-                .showdown__button {
-                    display: inline-block;
-                    background-color: #FF4136;
-                }
-                `;
-                document.head.appendChild(style);
-    
-                compareCards(state.playerOneDeck[0].code,state.playerTwoDeck[0].code);
-
-                count++;
-            } else {
-                const el1 = document.querySelector(`.card--1`);
-                const el2 = document.querySelector(`.card--2`);
-                //https://www.w3schools.com/jsref/met_node_removechild.asp
-          
-                el1.parentElement.removeChild(el1);
-                el2.parentElement.removeChild(el2);
-
-                renderCard(state.playerOneDeck,1);
-                renderCard(state.playerTwoDeck,2);
-                let style = document.createElement('style');
-                style.innerHTML = `
-    
-    
-                .players-card__player-2{
-                    display: block;
-                    }
-                .turn__button{
-                    display: none;
-                }
-                .showdown__button {
-                    display: inline-block;
-                    background-color: #FF4136;
-                }
-                `;
-                document.head.appendChild(style);
-    
-                compareCards(state.playerOneDeck[0].code,state.playerTwoDeck[0].code);
-                
-                console.log(state.playerOneDeck);
-                console.log(state.playerOnePile);
-                console.log(state.playerTwoDeck);
-                console.log(state.playerTwoPile);
-
-
-            }
-        });
-
-    
-    } catch (error){
-        alert(error);
-    }
-    
-};
-
-getDeckOfCards();
-
