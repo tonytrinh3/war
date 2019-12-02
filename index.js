@@ -13,6 +13,8 @@ const playWar = async () => {
         const result = await fetch('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1');
         const data = await result.json();
         
+    
+        
 
         //this is an array of 5 
         const playerOne = await(await fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/draw/?count=${52/2}`)).json();
@@ -20,8 +22,18 @@ const playWar = async () => {
         
         const playerTwo= await(await fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/draw/?count=${52/2}`)).json();
        
+        const piles = await(await fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${'funny'}/add/?cards=AS,2S,KS,QS`)).json();
+        console.log(piles);
+        const pilesShuffle = await(await fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${'funny'}/shuffle/`)).json();
+        console.log(pilesShuffle);
 
+        
+        const pilesList = await(await fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${'funny'}/list/`)).json();
+        console.log(pilesList);
 
+        const draw = await(await fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${'funny'}/draw/`)).json();
+        console.log(draw);
+        
         state.playerOneDeck = playerOne.cards;
        
  
@@ -114,7 +126,7 @@ const playWar = async () => {
             document.head.appendChild(style);
 
             const cardPot = [];
-            cardPot.push(state.playerOneDeck[0],state.playerTwoDeck[0]);
+            cardPot.push(state.playerOneDeck[0].code,state.playerTwoDeck[0].code);
             console.log(cardPot.length);
 
             if (cardNumber(state.playerOneDeck[0].code) > cardNumber(state.playerTwoDeck[0].code)){
@@ -134,11 +146,11 @@ const playWar = async () => {
                 while(card1 === card2){
                     setTimeout(renderCard(state.playerOneDeck[odd], 1),10000);
                     setTimeout(renderCard(state.playerTwoDeck[odd], 2),10000);
-                    cardPot.push(state.playerOneDeck[odd],state.playerTwoDeck[odd]);
+                    cardPot.push(state.playerOneDeck[odd].code,state.playerTwoDeck[odd].code);
 
                     setTimeout(renderCard(state.playerOneDeck[even], 1),10000);
                     setTimeout(renderCard(state.playerTwoDeck[even], 2),10000);
-                    cardPot.push(state.playerOneDeck[even],state.playerTwoDeck[even]);
+                    cardPot.push(state.playerOneDeck[even].code,state.playerTwoDeck[even].code);
 
                     if (cardNumber(state.playerOneDeck[even].code) > cardNumber(state.playerTwoDeck[even].code)){
                         state.playerOnePile = state.playerOnePile.concat(cardPot);//add card won onto pile for future use in deck api
