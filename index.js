@@ -55,10 +55,10 @@ const playWar = async () => {
 
         };
 
-        let playerOnePile = [];
-        state.playerOnePile = playerOnePile;
-        let playerTwoPile = [];
-        state.playerTwoPile = playerTwoPile;
+
+        state.playerOnePile = [];
+
+        state.playerTwoPile = [];
 
         const cardNumber = (cardCode) =>{
             const splitCardCode= cardCode.split("");
@@ -103,108 +103,102 @@ const playWar = async () => {
             
             renderCard(state.playerOneDeck[0], 1);
             renderCard(state.playerTwoDeck[0], 2);
-
+    
 
 
 
             let style = document.createElement('style');
             style.innerHTML = `
-            .players-card__player-2{
-                display: block;
-                }
-            .turn__button{
-                display: none;
-            }
-            .showdown__button {
-                display: inline-block;
-                background-color: #FF4136;
-            }
+        
             `;
             document.head.appendChild(style);
 
+            const cardPot = [];
+            cardPot.push(state.playerOneDeck[0],state.playerTwoDeck[0]);
+            console.log(cardPot.length);
 
+            if (cardNumber(state.playerOneDeck[0].code) > cardNumber(state.playerTwoDeck[0].code)){
+                state.playerOnePile = state.playerOnePile.concat(cardPot);//add card won onto pile for future use in deck api
+                state.playerOneDeck.splice(0,cardPot.length/2);//removes card from player one deck bc it is already in pile 
+                state.playerTwoDeck.splice(0,cardPot.length/2);//removes card from player two deck bc they lost
+            } else if (cardNumber(state.playerTwoDeck[0].code) > cardNumber(state.playerOneDeck[0].code)){
+                state.playerTwoPile = state.playerTwoPile.concat(cardPot);//add card won onto pile for future use in deck api
+                state.playerTwoDeck.splice(0,cardPot.length/2);//removes card from player one deck bc it is already in pile 
+                state.playerOneDeck.splice(0,cardPot.length/2);
+            } else if (cardNumber(state.playerOneDeck[0].code) === cardNumber(state.playerTwoDeck[0].code)){
+                let card1 = cardNumber(state.playerOneDeck[0].code) ;
+                let card2 = cardNumber(state.playerTwoDeck[0].code);
+                let odd = 1;
+                let even =2
 
-            
+                while(card1 === card2){
+                    setTimeout(renderCard(state.playerOneDeck[odd], 1),10000);
+                    setTimeout(renderCard(state.playerTwoDeck[odd], 2),10000);
+                    cardPot.push(state.playerOneDeck[odd],state.playerTwoDeck[odd]);
 
-            
-                const cardPot = [];
-                cardPot.push(state.playerOneDeck[0],state.playerTwoDeck[0]);
+                    setTimeout(renderCard(state.playerOneDeck[even], 1),10000);
+                    setTimeout(renderCard(state.playerTwoDeck[even], 2),10000);
+                    cardPot.push(state.playerOneDeck[even],state.playerTwoDeck[even]);
 
-                if (cardNumber(state.playerOneDeck[0].code) > cardNumber(state.playerTwoDeck[0].code)){
-                    state.playerOnePile = state.playerOnePile.concat(cardPot);//add card won onto pile for future use in deck api
-                    state.playerOneDeck.splice(0,cardPot.length/2);//removes card from player one deck bc it is already in pile 
-                    state.playerTwoDeck.splice(0,cardPot.length/2);//removes card from player two deck bc they lost
-                } else if (cardNumber(state.playerTwoDeck[0].code) > cardNumber(state.playerOneDeck[0].code)){
-                    state.playerTwoPile = state.playerTwoPile.concat(cardPot);//add card won onto pile for future use in deck api
-                    state.playerTwoDeck.splice(0,cardPot.length/2);//removes card from player one deck bc it is already in pile 
-                    state.playerOneDeck.splice(0,cardPot.length/2);
-                } else if (cardNumber(state.playerOneDeck[0].code) === cardNumber(state.playerTwoDeck[0].code)){
-                    let card1 = cardNumber(state.playerOneDeck[0].code) ;
-                    let card2 = cardNumber(state.playerTwoDeck[0].code);
-                    let odd = 1;
-                    let even =2
-    
-                    while(card1 === card2){
-                        setTimeout(renderCard(state.playerOneDeck[odd], 1),10000);
-                        setTimeout(renderCard(state.playerTwoDeck[odd], 2),10000);
-                        cardPot.push(state.playerOneDeck[odd],state.playerTwoDeck[odd]);
-    
-                        setTimeout(renderCard(state.playerOneDeck[even], 1),10000);
-                        setTimeout(renderCard(state.playerTwoDeck[even], 2),10000);
-                        cardPot.push(state.playerOneDeck[even],state.playerTwoDeck[even]);
-
-                        if (cardNumber(state.playerOneDeck[even].code) > cardNumber(state.playerTwoDeck[even].code)){
-                            state.playerOnePile = state.playerOnePile.concat(cardPot);//add card won onto pile for future use in deck api
-                            state.playerOneDeck.splice(0,cardPot.length/2);//removes card from player one deck bc it is already in pile 
-                            state.playerTwoDeck.splice(0,cardPot.length/2);//removes card from player two deck bc they lost
-                            break
-                        } else if (cardNumber(state.playerTwoDeck[even].code) > cardNumber(state.playerOneDeck[even].code)){
-                            state.playerTwoPile = state.playerTwoPile.concat(cardPot);//add card won onto pile for future use in deck api
-                            state.playerTwoDeck.splice(0,cardPot.length/2);//removes card from player one deck bc it is already in pile 
-                            state.playerOneDeck.splice(0,cardPot.length/2);
-                            break
-                        } else if (cardNumber(state.playerOneDeck[even].code) === cardNumber(state.playerTwoDeck[even].code)){
-                            card1 = cardNumber(state.playerOneDeck[even].code); 
-                            card2 = cardNumber(state.playerTwoDeck[even].code);
-                            odd = odd +2;
-                            even = even + 2;
-                        }
+                    if (cardNumber(state.playerOneDeck[even].code) > cardNumber(state.playerTwoDeck[even].code)){
+                        state.playerOnePile = state.playerOnePile.concat(cardPot);//add card won onto pile for future use in deck api
+                        state.playerOneDeck.splice(0,cardPot.length/2);//removes card from player one deck bc it is already in pile 
+                        state.playerTwoDeck.splice(0,cardPot.length/2);//removes card from player two deck bc they lost
+                        break
+                    } else if (cardNumber(state.playerTwoDeck[even].code) > cardNumber(state.playerOneDeck[even].code)){
+                        state.playerTwoPile = state.playerTwoPile.concat(cardPot);//add card won onto pile for future use in deck api
+                        state.playerTwoDeck.splice(0,cardPot.length/2);//removes card from player one deck bc it is already in pile 
+                        state.playerOneDeck.splice(0,cardPot.length/2);
+                        break
+                    } else if (cardNumber(state.playerOneDeck[even].code) === cardNumber(state.playerTwoDeck[even].code)){
+                        card1 = cardNumber(state.playerOneDeck[even].code); 
+                        card2 = cardNumber(state.playerTwoDeck[even].code);
+                        odd = odd +2;
+                        even = even + 2;
                     }
                 }
+            }
 
-
-                
-
-      
-
-                
-
-            
-
-            
             console.log(state.playerOneDeck);
             console.log(state.playerOnePile);
             console.log(state.playerTwoDeck);
             console.log(state.playerTwoPile);
 
-
+            document.querySelector('.card-count__player-1').innerHTML = `${state.playerOneDeck.length + state.playerOnePile.length } in the deck`;
+            document.querySelector('.card-count__player-2').innerHTML = `${state.playerTwoDeck.length + state.playerTwoPile.length } in the deck`;
         }
 
         document.querySelector(`.war__button`).addEventListener('click', () =>{
-            const el1 = document.querySelector(`.card--1`);
-            const el2 = document.querySelector(`.card--2`);
+            //i only did this to trigger the if function
+            let el1 = document.querySelector(`.card--1`);
+            let el2 = document.querySelector(`.card--2`);
 
             if (el1 && el2){
                 //https://www.w3schools.com/jsref/met_node_removechild.asp
-          
-                el1.parentElement.removeChild(el1);
-                el2.parentElement.removeChild(el2);
+                //select all card
+                //it is an array
+                el1 = document.querySelectorAll(`.card--1`);
+            
+                el2 = document.querySelectorAll(`.card--2`);
+                
+                //remove all cards by going through each element of array
+                el1.forEach((curEl)=>{
+                    curEl.parentElement.removeChild(curEl);
+                })
+                
+                el2.forEach((curEl)=>{
+                    curEl.parentElement.removeChild(curEl);
+                })
+
 
                 dummy();
+
+                
                
             } else {
 
                 dummy();
+            
 
             }
         });
