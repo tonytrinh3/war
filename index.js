@@ -16,17 +16,17 @@ const playWar = async () => {
 
         //this is an array of 5 
         const playerOne = await(await fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/draw/?count=${52/2}`)).json();
-       console.log(playerOne.cards);
+      
         
         const playerTwo= await(await fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/draw/?count=${52/2}`)).json();
        
 
 
         state.playerOneDeck = playerOne.cards;
-        console.log(state.playerOneDeck[0]);
+       
  
         state.playerTwoDeck = playerTwo.cards;
-        console.log( state.playerTwoDeck );
+    
 
     
 
@@ -36,28 +36,28 @@ const playWar = async () => {
         
         const renderCard = (card, playerNumber) =>{
             
-                const displayCard = `<img class = "card--${playerNumber}" src = ${card.image} alt = ${card.code}/>`;
+            const displayCard = `<img class = "card--${playerNumber}" src = ${card.image} alt = ${card.code}/>`;
 
-                // const cardIndex = (playerNumber*10)+index+1;
+            // const cardIndex = (playerNumber*10)+index+1;
 
-                document.querySelector(`.players-card__player-${playerNumber}`).insertAdjacentHTML('beforeend',displayCard);
+            document.querySelector(`.players-card__player-${playerNumber}`).insertAdjacentHTML('beforeend',displayCard);
 
-                //https://dev.to/karataev/set-css-styles-with-javascript-3nl5
-                let style = document.createElement('style');
-                style.innerHTML = `
-                .players-card__card {
-                background-color: green;
-                }
-                `;
-                document.head.appendChild(style);
-                //passed down the cards array from json, cardindex that is relevant to changing the card, and player number
-                // renderNewCard(cards,index, playerNumber);
+            //https://dev.to/karataev/set-css-styles-with-javascript-3nl5
+            let style = document.createElement('style');
+            style.innerHTML = `
+            .players-card__card {
+            background-color: green;
+            }
+            `;
+            document.head.appendChild(style);
+            //passed down the cards array from json, cardindex that is relevant to changing the card, and player number
+            // renderNewCard(cards,index, playerNumber);
 
         };
 
-        const playerOnePile = [];
+        let playerOnePile = [];
         state.playerOnePile = playerOnePile;
-        const playerTwoPile = [];
+        let playerTwoPile = [];
         state.playerTwoPile = playerTwoPile;
 
         const cardNumber = (cardCode) =>{
@@ -82,21 +82,28 @@ const playWar = async () => {
 
 
         const compareCards = (playerOneCard,playerTwoCard) => {
+            const cardPot = [];
+            cardPot.push(playerOneCard,playerTwoCard);
             if (cardNumber(playerOneCard) > cardNumber(playerTwoCard)){
-                state.playerOnePile.push(playerOneCard,playerTwoCard);//add card won onto pile for future use in deck api
-                state.playerOneDeck.splice(0,1);//removes card from player one deck bc it is already in pile 
-                state.playerTwoDeck.splice(0,1);//removes card from player two deck bc they lost
+                state.playerOnePile = state.playerOnePile.concat(cardPot);//add card won onto pile for future use in deck api
+                state.playerOneDeck.splice(0,cardPot.length/2);//removes card from player one deck bc it is already in pile 
+                state.playerTwoDeck.splice(0,cardPot.length/2);//removes card from player two deck bc they lost
             } else if (cardNumber(playerTwoCard) > cardNumber(playerOneCard)){
-                state.playerTwoPile.push(playerTwoCard,playerOneCard);
-                state.playerTwoDeck.splice(0,1);//removes card from player one deck bc it is already in pile 
-                state.playerOneDeck.splice(0,1);
-            } 
+                state.playerTwoPile = state.playerTwoPile.concat(cardPot);//add card won onto pile for future use in deck api
+                state.playerTwoDeck.splice(0,cardPot.length/2);//removes card from player one deck bc it is already in pile 
+                state.playerOneDeck.splice(0,cardPot.length/2);
+            } else if (cardNumber(playerOneCard) === cardNumber(playerTwoCard)){
+
+            }
         };
 
 
         const dummy = () =>{
+
+            
             renderCard(state.playerOneDeck[0], 1);
             renderCard(state.playerTwoDeck[0], 2);
+
 
 
 
@@ -115,12 +122,64 @@ const playWar = async () => {
             `;
             document.head.appendChild(style);
 
-            if (cardNumber(state.playerOneDeck[0].code) !== cardNumber(state.playerTwoDeck[0].code)){
-                compareCards(state.playerOneDeck[0].code,state.playerTwoDeck[0].code);
-            } else if (cardNumber(state.playerOneDeck[0].code) === cardNumber(state.playerTwoDeck[0].code)){
-                renderCard(state.playerOneDeck[0], 1);
-                renderCard(state.playerTwoDeck[0], 2);
-            }
+
+
+            
+
+            
+                const cardPot = [];
+                cardPot.push(state.playerOneDeck[0],state.playerTwoDeck[0]);
+
+                if (cardNumber(state.playerOneDeck[0].code) > cardNumber(state.playerTwoDeck[0].code)){
+                    state.playerOnePile = state.playerOnePile.concat(cardPot);//add card won onto pile for future use in deck api
+                    state.playerOneDeck.splice(0,cardPot.length/2);//removes card from player one deck bc it is already in pile 
+                    state.playerTwoDeck.splice(0,cardPot.length/2);//removes card from player two deck bc they lost
+                } else if (cardNumber(state.playerTwoDeck[0].code) > cardNumber(state.playerOneDeck[0].code)){
+                    state.playerTwoPile = state.playerTwoPile.concat(cardPot);//add card won onto pile for future use in deck api
+                    state.playerTwoDeck.splice(0,cardPot.length/2);//removes card from player one deck bc it is already in pile 
+                    state.playerOneDeck.splice(0,cardPot.length/2);
+                } else if (cardNumber(state.playerOneDeck[0].code) === cardNumber(state.playerTwoDeck[0].code)){
+                    let card1 = cardNumber(state.playerOneDeck[0].code) ;
+                    let card2 = cardNumber(state.playerTwoDeck[0].code);
+                    let odd = 1;
+                    let even =2
+    
+                    while(card1 === card2){
+                        setTimeout(renderCard(state.playerOneDeck[odd], 1),10000);
+                        setTimeout(renderCard(state.playerTwoDeck[odd], 2),10000);
+                        cardPot.push(state.playerOneDeck[odd],state.playerTwoDeck[odd]);
+    
+                        setTimeout(renderCard(state.playerOneDeck[even], 1),10000);
+                        setTimeout(renderCard(state.playerTwoDeck[even], 2),10000);
+                        cardPot.push(state.playerOneDeck[even],state.playerTwoDeck[even]);
+
+                        if (cardNumber(state.playerOneDeck[even].code) > cardNumber(state.playerTwoDeck[even].code)){
+                            state.playerOnePile = state.playerOnePile.concat(cardPot);//add card won onto pile for future use in deck api
+                            state.playerOneDeck.splice(0,cardPot.length/2);//removes card from player one deck bc it is already in pile 
+                            state.playerTwoDeck.splice(0,cardPot.length/2);//removes card from player two deck bc they lost
+                            break
+                        } else if (cardNumber(state.playerTwoDeck[even].code) > cardNumber(state.playerOneDeck[even].code)){
+                            state.playerTwoPile = state.playerTwoPile.concat(cardPot);//add card won onto pile for future use in deck api
+                            state.playerTwoDeck.splice(0,cardPot.length/2);//removes card from player one deck bc it is already in pile 
+                            state.playerOneDeck.splice(0,cardPot.length/2);
+                            break
+                        } else if (cardNumber(state.playerOneDeck[even].code) === cardNumber(state.playerTwoDeck[even].code)){
+                            card1 = cardNumber(state.playerOneDeck[even].code); 
+                            card2 = cardNumber(state.playerTwoDeck[even].code);
+                            odd = odd +2;
+                            even = even + 2;
+                        }
+                    }
+                }
+
+
+                
+
+      
+
+                
+
+            
 
             
             console.log(state.playerOneDeck);
