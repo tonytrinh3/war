@@ -22,16 +22,16 @@ const playWar = async () => {
         
         const playerTwo= await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/draw/?count=${52/2}`)).json();
        
-        // const carArray = ["AS","2S","KS","QS"];
-        // const piles = await(await fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${'funny'}/add/?cards=${carArray.toString()}`)).json();
-        // console.log(piles);
-        // const pilesShuffle = await(await fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${'funny'}/shuffle/`)).json();
-        // console.log(pilesShuffle);
+    //     const carArray = ["AS","2S","KS","QS"];
+    //     const piles = await(await fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${'funny'}/add/?cards=${carArray.toString()}`)).json();
+    //     console.log(piles);
+    //     const pilesShuffle = await(await fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${'funny'}/shuffle/`)).json();
+    //     console.log(pilesShuffle);
 
         
-        // const pilesList = await(await fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${'funny'}/list/`)).json();
-        // console.log(pilesList.piles.funny.cards);
-
+    //     const pilesList = await(await fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${'funny'}/list/`)).json();
+    //    const pilesDraw =  await(await fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${'funny'}/draw/?count=4`)).json();
+    //     console.log(pilesDraw.cards);
         
         
         state.playerOneDeck = playerOne.cards;
@@ -183,47 +183,76 @@ const playWar = async () => {
         };
 
         const pileToDeck = async () => {
-            if (state.playerOnePile.length > 0){
+            if (state.playerOnePile.length > 6){
 
                 const playerOneDeck = 'playerOneDeck';
 
                 const piles = await( await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerOneDeck}/add/?cards=${state.playerOnePile.toString()}`) ).json();
-             
                 const pilesShuffle = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerOneDeck}/shuffle/`)).json();
               
-
-                
                 const pilesList = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerOneDeck}/list/`)).json();
                console.log(pilesList);
-               const pilesDraw = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerOneDeck}/draw/?count=1`)).json();
+               const pilesDraw = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerOneDeck}/draw/?count=${state.playerOnePile.length }`)).json();
                 console.log(pilesDraw);
-                // state.playerOneDeck = state.playerOneDeck.concat(pilesList.piles.playerOneDeck.cards);
+                state.playerOneDeck = state.playerOneDeck.concat(pilesDraw.cards);
 
-                 state.playerOneDeck = [...state.playerOneDeck, ...pilesDraw.cards]
-
-                
+                //  state.playerOneDeck = [...state.playerOneDeck, ...pilesDraw.cards]
                 state.playerOnePile=[];
-
-                
                 console.log(state.playerOneDeck);
                 console.log(state.playerOnePile);
                 
-            } else if (state.playerTwoPile.length > 0){
+            } else if (state.playerTwoPile.length > 6){
                 const playerTwoDeck = 'playerTwoDeck';
-                const piles = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerTwoDeck}/add/?cards=${state.playerOnePile.toString()}`)).json();
+                const piles = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerTwoDeck}/add/?cards=${state.playerTwoPile.toString()}`)).json();
                 
                 const pilesShuffle = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerTwoDeck}/shuffle/`)).json();
          
                 const pilesList = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerTwoDeck}/list/`)).json();
                 console.log(pilesList);
-                const pilesDraw = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerTwoDeck}/draw/?count=1`)).json();
+                const pilesDraw = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerTwoDeck}/draw/?count=${state.playerTwoPile.length}`)).json();
                 console.log(pilesDraw);
-                state.playerTwoDeck = [...state.playerTwoDeck, ...pilesDraw.cards];
+                state.playerTwoDeck = state.playerTwoDeck.concat(pilesDraw.cards);
+
+                // state.playerTwoDeck = [...state.playerTwoDeck, ...pilesDraw.cards];
                 state.playerTwoPile=[];
                 
                 console.log(state.playerTwoDeck);
                 console.log(state.playerTwoPile);
-            }
+            } 
+            // else if (state.playerOneDeck.length === 0 && state.playerOnePile.length >0) {
+            //     const playerOneDeck = 'playerOneDeck';
+
+            //     const piles = await( await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerOneDeck}/add/?cards=${state.playerOnePile.toString()}`) ).json();
+            //     const pilesShuffle = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerOneDeck}/shuffle/`)).json();
+              
+            //     const pilesList = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerOneDeck}/list/`)).json();
+            //    console.log(pilesList);
+            //    const pilesDraw = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerOneDeck}/draw/?count=${state.playerOnePile.length }`)).json();
+            //     console.log(pilesDraw);
+            //     state.playerOneDeck = state.playerOneDeck.concat(pilesDraw.cards);
+
+            //     //  state.playerOneDeck = [...state.playerOneDeck, ...pilesDraw.cards]
+            //     state.playerOnePile=[];
+            //     console.log(state.playerOneDeck);
+            //     console.log(state.playerOnePile);
+            // } else if (state.playerTwoDeck.length === 0 && state.playerTwoPile.length >0){
+            //     const playerTwoDeck = 'playerTwoDeck';
+            //     const piles = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerTwoDeck}/add/?cards=${state.playerTwoPile.toString()}`)).json();
+                
+            //     const pilesShuffle = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerTwoDeck}/shuffle/`)).json();
+         
+            //     const pilesList = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerTwoDeck}/list/`)).json();
+            //     console.log(pilesList);
+            //     const pilesDraw = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerTwoDeck}/draw/?count=${state.playerTwoPile.length}`)).json();
+            //     console.log(pilesDraw);
+            //     state.playerTwoDeck = state.playerTwoDeck.concat(pilesDraw.cards);
+
+            //     // state.playerTwoDeck = [...state.playerTwoDeck, ...pilesDraw.cards];
+            //     state.playerTwoPile=[];
+                
+            //     console.log(state.playerTwoDeck);
+            //     console.log(state.playerTwoPile);
+            // }
 
         };
 
