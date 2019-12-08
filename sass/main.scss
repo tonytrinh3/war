@@ -1,0 +1,95 @@
+@import "abstracts/functions";
+@import "abstracts/mixins";
+@import "abstracts/variables";
+
+@import "base/animations";
+@import "base/base";
+@import "base/typography";
+@import "base/utilities";
+
+@import "pages/home";
+
+
+
+
+
+body{
+    color: $color-primary;
+}
+
+* {
+    font-family: 'Roboto', sans-serif;
+}
+body{
+    background-color: green;
+}
+
+h1{
+    font-weight: 700;
+}
+
+p{
+    font-weight: 400;
+}
+
+
+.players-card{
+    display: block;
+}
+
+.players-card__card {
+    border: none;
+    outline: none;
+    background-color: green;
+  
+}
+
+.players-card__player-2{
+    display: block;
+}
+
+.turn {
+    display: inline-block;
+    margin-top: 2em;
+    margin-left: 1em;
+}
+
+
+.showdown{
+    display: inline-block;
+    margin-top: 2em;
+    margin-left: 1em;
+}
+
+.showdown__button{
+
+    display: none;
+
+}
+
+.war__button{
+    border-radius: 10px;
+    border:none;
+    background-color: #001f3f;
+    color: white;
+    font-weight: 400;
+    font-size: 14px;
+    text-align: center;
+    text-decoration: none;
+    padding: 50px 100px;
+   
+
+}
+
+.card-count{
+    font-size: 2em;
+    color: red;
+   display: block;
+
+}
+
+.winner__header{
+    font-size: 6em;
+    color: red;
+   display: none;
+}
