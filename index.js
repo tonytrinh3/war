@@ -17,10 +17,10 @@ const playWar = async () => {
         
 
         //this is an array of 5 
-        const playerOne = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/draw/?count=${10/2}`)).json();
+        const playerOne = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/draw/?count=${52/2}`)).json();
       
         
-        const playerTwo= await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/draw/?count=${10/2}`)).json();
+        const playerTwo= await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/draw/?count=${52/2}`)).json();
        
     //     const carArray = ["AS","2S","KS","QS"];
     //     const piles = await(await fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${'funny'}/add/?cards=${carArray.toString()}`)).json();
