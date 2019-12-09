@@ -17,10 +17,10 @@ const playWar = async () => {
         
 
         //this is an array of 5 
-        const playerOne = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/draw/?count=${52/2}`)).json();
+        const playerOne = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/draw/?count=${10/2}`)).json();
       
         
-        const playerTwo= await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/draw/?count=${52/2}`)).json();
+        const playerTwo= await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/draw/?count=${10/2}`)).json();
        
     //     const carArray = ["AS","2S","KS","QS"];
     //     const piles = await(await fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${'funny'}/add/?cards=${carArray.toString()}`)).json();
@@ -109,8 +109,48 @@ const playWar = async () => {
         //     }
         // };
 
+        const equalCardDuel = (cardPot) =>{
+            let card1 = cardNumber(state.playerOneDeck[0].code) ;
+            let card2 = cardNumber(state.playerTwoDeck[0].code);
+            let odd = 1;
+            let even =2
+    
+            while(card1 === card2){
+                setTimeout(renderCard(state.playerOneDeck[odd], 1),10000);
+                setTimeout(renderCard(state.playerTwoDeck[odd], 2),10000);
+                cardPot.push(state.playerOneDeck[odd].code,state.playerTwoDeck[odd].code);
+                //cardPot.push(state.playerOneDeck[odd],state.playerTwoDeck[odd]);
+    
+                setTimeout(renderCard(state.playerOneDeck[even], 1),10000);
+                setTimeout(renderCard(state.playerTwoDeck[even], 2),10000);
+                cardPot.push(state.playerOneDeck[even].code,state.playerTwoDeck[even].code);
+                //cardPot.push(state.playerOneDeck[even],state.playerTwoDeck[even]);
+    
+                if (cardNumber(state.playerOneDeck[even].code) > cardNumber(state.playerTwoDeck[even].code)){
+                    state.playerOnePile = state.playerOnePile.concat(cardPot);//add card won onto pile for future use in deck api
+                    //state.playerOneDeck = state.playerOneDeck.concat(cardPot);//add card won onto pile for future use in deck api
+                    state.playerOneDeck.splice(0,cardPot.length/2);//removes card from player one deck bc it is already in pile 
+                    state.playerTwoDeck.splice(0,cardPot.length/2);//removes card from player two deck bc they lost
+                    break
+                } else if (cardNumber(state.playerTwoDeck[even].code) > cardNumber(state.playerOneDeck[even].code)){
+                    state.playerTwoPile = state.playerTwoPile.concat(cardPot);//add card won onto pile for future use in deck api
+                    //state.playerTwoDeck = state.playerTwoDeck.concat(cardPot);//add card won onto pile for future use in deck api
+                    state.playerTwoDeck.splice(0,cardPot.length/2);//removes card from player one deck bc it is already in pile 
+                    state.playerOneDeck.splice(0,cardPot.length/2);
+                    break
+                } else if (cardNumber(state.playerOneDeck[even].code) === cardNumber(state.playerTwoDeck[even].code)){
+                    card1 = cardNumber(state.playerOneDeck[even].code); 
+                    card2 = cardNumber(state.playerTwoDeck[even].code);
+                    odd = odd + 2;
+                    even = even + 2;
+                }
+            }
+            
+        }
 
-        const dummy = () =>{
+
+
+        const dummy = async () =>{
 
             
             renderCard(state.playerOneDeck[0], 1);
@@ -126,55 +166,94 @@ const playWar = async () => {
             document.head.appendChild(style);
 
             const cardPot = [];
-            //cardPot.push(state.playerOneDeck[0].code,state.playerTwoDeck[0].code);
-            cardPot.push(state.playerOneDeck[0],state.playerTwoDeck[0]);
+            cardPot.push(state.playerOneDeck[0].code,state.playerTwoDeck[0].code);
+            //cardPot.push(state.playerOneDeck[0],state.playerTwoDeck[0]);
             
 
             if (cardNumber(state.playerOneDeck[0].code) > cardNumber(state.playerTwoDeck[0].code)){
-                //state.playerOnePile = state.playerOnePile.concat(cardPot);//add card won onto pile for future use in deck api
-                state.playerOneDeck = state.playerOneDeck.concat(cardPot);//add card won onto pile for future use in deck api
+                state.playerOnePile = state.playerOnePile.concat(cardPot);//add card won onto pile for future use in deck api
+                //state.playerOneDeck = state.playerOneDeck.concat(cardPot);//add card won onto pile for future use in deck api
                 state.playerOneDeck.splice(0,cardPot.length/2);//removes card from player one deck bc it is already in pile 
                 state.playerTwoDeck.splice(0,cardPot.length/2);//removes card from player two deck bc they lost
             } else if (cardNumber(state.playerTwoDeck[0].code) > cardNumber(state.playerOneDeck[0].code)){
-                //state.playerTwoPile = state.playerTwoPile.concat(cardPot);//add card won onto pile for future use in deck api
-                state.playerTwoDeck = state.playerTwoDeck.concat(cardPot);//add card won onto pile for future use in deck api
+                state.playerTwoPile = state.playerTwoPile.concat(cardPot);//add card won onto pile for future use in deck api
+                //state.playerTwoDeck = state.playerTwoDeck.concat(cardPot);//add card won onto pile for future use in deck api
                 state.playerTwoDeck.splice(0,cardPot.length/2);//removes card from player one deck bc it is already in pile 
                 state.playerOneDeck.splice(0,cardPot.length/2);
             } else if (cardNumber(state.playerOneDeck[0].code) === cardNumber(state.playerTwoDeck[0].code)){
-                let card1 = cardNumber(state.playerOneDeck[0].code) ;
-                let card2 = cardNumber(state.playerTwoDeck[0].code);
-                let odd = 1;
-                let even =2
-
-                while(card1 === card2){
-                    setTimeout(renderCard(state.playerOneDeck[odd], 1),10000);
-                    setTimeout(renderCard(state.playerTwoDeck[odd], 2),10000);
-                    //cardPot.push(state.playerOneDeck[odd].code,state.playerTwoDeck[odd].code);
-                    cardPot.push(state.playerOneDeck[odd],state.playerTwoDeck[odd]);
-
-                    setTimeout(renderCard(state.playerOneDeck[even], 1),10000);
-                    setTimeout(renderCard(state.playerTwoDeck[even], 2),10000);
-                    //cardPot.push(state.playerOneDeck[even].code,state.playerTwoDeck[even].code);
-                    cardPot.push(state.playerOneDeck[even],state.playerTwoDeck[even]);
-
-                    if (cardNumber(state.playerOneDeck[even].code) > cardNumber(state.playerTwoDeck[even].code)){
-                        //state.playerOnePile = state.playerOnePile.concat(cardPot);//add card won onto pile for future use in deck api
-                        state.playerOneDeck = state.playerOneDeck.concat(cardPot);//add card won onto pile for future use in deck api
-                        state.playerOneDeck.splice(0,cardPot.length/2);//removes card from player one deck bc it is already in pile 
-                        state.playerTwoDeck.splice(0,cardPot.length/2);//removes card from player two deck bc they lost
-                        break
-                    } else if (cardNumber(state.playerTwoDeck[even].code) > cardNumber(state.playerOneDeck[even].code)){
-                        //state.playerTwoPile = state.playerTwoPile.concat(cardPot);//add card won onto pile for future use in deck api
-                        state.playerTwoDeck = state.playerTwoDeck.concat(cardPot);//add card won onto pile for future use in deck api
-                        state.playerTwoDeck.splice(0,cardPot.length/2);//removes card from player one deck bc it is already in pile 
-                        state.playerOneDeck.splice(0,cardPot.length/2);
-                        break
-                    } else if (cardNumber(state.playerOneDeck[even].code) === cardNumber(state.playerTwoDeck[even].code)){
-                        card1 = cardNumber(state.playerOneDeck[even].code); 
-                        card2 = cardNumber(state.playerTwoDeck[even].code);
-                        odd = odd + 2;
-                        even = even + 2;
+                //deal with end case where you have less then 3 cards but happen to draw same card on card number 2
+                if (state.playerOneDeck.length + state.playerOnePile.length < 3){
+                    let style = document.createElement('style');
+                    style.innerHTML = `
+                    .winner h1{
+                        display:block;
                     }
+                `;
+                document.head.appendChild(style);
+                document.querySelector(".war__button").disabled = true;
+                document.querySelector('.winner__header').innerHTML = "Player Two won!"
+                    //deal with end case where you have less then 3 cards but happen to draw same card on card number 2
+                } else if (state.playerTwoDeck.length + state.playerTwoPile.length < 3) {
+                    let style = document.createElement('style');
+                    style.innerHTML = `
+                        .winner h1{
+                            display:block;
+                        }
+                    `;
+                    document.head.appendChild(style);
+                    document.querySelector(".war__button").disabled = true;
+                    document.querySelector('.winner__header').innerHTML = "Player One won!" 
+                //edge case when you happen to draw equal card on card number 1 but don't have enough card in deck but enough in pile
+                } else if (state.playerOneDeck.length < 3 && state.playerOnePile.length > 3) {
+                    
+                    document.querySelector(`.war__button`).disabled = true;
+
+                    const playerOneDeck = 'playerOneDeck';
+
+                    const piles = await( await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerOneDeck}/add/?cards=${state.playerOnePile.toString()}`) ).json();
+                    const pilesShuffle = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerOneDeck}/shuffle/`)).json();
+                
+                    const pilesList = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerOneDeck}/list/`)).json();
+                    console.log(pilesList);
+                    const pilesDraw = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerOneDeck}/draw/?count=${state.playerOnePile.length }`)).json();
+                    console.log(pilesDraw);
+                    state.playerOneDeck = state.playerOneDeck.concat(pilesDraw.cards);
+
+                    //  state.playerOneDeck = [...state.playerOneDeck, ...pilesDraw.cards]
+                    state.playerOnePile=[];
+                    console.log(state.playerOneDeck);
+                    console.log(state.playerOnePile);
+
+                    document.querySelector(`.war__button`).disabled = false;
+
+                    equalCardDuel(cardPot);
+                    
+
+                } else if(state.playerTwoDeck.length < 3 && state.playerTwoPile.length > 3) {
+                    
+                    document.querySelector(`.war__button`).disabled = true;
+                    const playerTwoDeck = 'playerTwoDeck';
+                    const piles = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerTwoDeck}/add/?cards=${state.playerTwoPile.toString()}`)).json();
+                    
+                    const pilesShuffle = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerTwoDeck}/shuffle/`)).json();
+             
+                    const pilesList = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerTwoDeck}/list/`)).json();
+                    console.log(pilesList);
+                    const pilesDraw = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerTwoDeck}/draw/?count=${state.playerTwoPile.length}`)).json();
+                    console.log(pilesDraw);
+                    state.playerTwoDeck = state.playerTwoDeck.concat(pilesDraw.cards);
+    
+                    // state.playerTwoDeck = [...state.playerTwoDeck, ...pilesDraw.cards];
+                    state.playerTwoPile=[];
+                    
+                    console.log(state.playerTwoDeck);
+                    console.log(state.playerTwoPile);
+    
+                    document.querySelector(`.war__button`).disabled = false;
+
+                    equalCardDuel(cardPot);
+                } else {
+                    equalCardDuel(cardPot);
                 }
             }
 
@@ -183,40 +262,21 @@ const playWar = async () => {
             console.log(state.playerTwoDeck);
             console.log(state.playerTwoPile);
 
-            if (state.playerOneDeck.length === 0 ){
-                let style = document.createElement('style');
-                style.innerHTML = `
-                    .winner h1{
-                        display:block;
-                    }
-                `;
-                document.head.appendChild(style);
-                document.querySelector(".war__button").disabled = true;
+           
 
-                document.querySelector('.winner__header').innerHTML = "Player Two won!"
-            } else if (state.playerTwoDeck.length === 0 ){
-                let style = document.createElement('style');
-                style.innerHTML = `
-                    .winner h1{
-                        display:block;
-                    }
-                `;
-                document.head.appendChild(style);
-                document.querySelector(".war__button").disabled = true;
-                document.querySelector('.winner__header').innerHTML = "Player One won!" 
-            }
+            document.querySelector('.card-count__player-1').innerHTML = `${state.playerOneDeck.length + state.playerOnePile.length } in the deck`;
+            document.querySelector('.card-count__player-2').innerHTML = `${state.playerTwoDeck.length + state.playerTwoPile.length } in the deck`;
 
-            //document.querySelector('.card-count__player-1').innerHTML = `${state.playerOneDeck.length + state.playerOnePile.length } in the deck`;
-            //document.querySelector('.card-count__player-2').innerHTML = `${state.playerTwoDeck.length + state.playerTwoPile.length } in the deck`;
-
-            document.querySelector('.card-count__player-1').innerHTML = `${state.playerOneDeck.length } in the deck`;
-            document.querySelector('.card-count__player-2').innerHTML = `${state.playerTwoDeck.length } in the deck`;
+            //document.querySelector('.card-count__player-1').innerHTML = `${state.playerOneDeck.length } in the deck`;
+            //document.querySelector('.card-count__player-2').innerHTML = `${state.playerTwoDeck.length } in the deck`;
 
             //pileToDeck();
         };
 
         const pileToDeck = async () => {
-            if (state.playerOnePile.length >= 4){
+            if (state.playerOneDeck.length === 0){
+
+                document.querySelector(`.war__button`).disabled = true;
 
                 const playerOneDeck = 'playerOneDeck';
 
@@ -233,8 +293,14 @@ const playWar = async () => {
                 state.playerOnePile=[];
                 console.log(state.playerOneDeck);
                 console.log(state.playerOnePile);
+
+                document.querySelector(`.war__button`).disabled = false;
                 
-            } else if (state.playerTwoPile.length >= 4){
+            } 
+            
+            if (state.playerTwoDeck.length === 0){
+
+                document.querySelector(`.war__button`).disabled = true;
                 const playerTwoDeck = 'playerTwoDeck';
                 const piles = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerTwoDeck}/add/?cards=${state.playerTwoPile.toString()}`)).json();
                 
@@ -251,44 +317,41 @@ const playWar = async () => {
                 
                 console.log(state.playerTwoDeck);
                 console.log(state.playerTwoPile);
+
+                document.querySelector(`.war__button`).disabled = false;
             } 
-            // else if (state.playerOneDeck.length === 0 && state.playerOnePile.length >0) {
-            //     const playerOneDeck = 'playerOneDeck';
-
-            //     const piles = await( await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerOneDeck}/add/?cards=${state.playerOnePile.toString()}`) ).json();
-            //     const pilesShuffle = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerOneDeck}/shuffle/`)).json();
-              
-            //     const pilesList = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerOneDeck}/list/`)).json();
-            //    console.log(pilesList);
-            //    const pilesDraw = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerOneDeck}/draw/?count=${state.playerOnePile.length }`)).json();
-            //     console.log(pilesDraw);
-            //     state.playerOneDeck = state.playerOneDeck.concat(pilesDraw.cards);
-
-            //     //  state.playerOneDeck = [...state.playerOneDeck, ...pilesDraw.cards]
-            //     state.playerOnePile=[];
-            //     console.log(state.playerOneDeck);
-            //     console.log(state.playerOnePile);
-            // } else if (state.playerTwoDeck.length === 0 && state.playerTwoPile.length >0){
-            //     const playerTwoDeck = 'playerTwoDeck';
-            //     const piles = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerTwoDeck}/add/?cards=${state.playerTwoPile.toString()}`)).json();
-                
-            //     const pilesShuffle = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerTwoDeck}/shuffle/`)).json();
-         
-            //     const pilesList = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerTwoDeck}/list/`)).json();
-            //     console.log(pilesList);
-            //     const pilesDraw = await(await fetch(`https://deckofcardsapi.com/api/deck/${state.deck_id}/pile/${playerTwoDeck}/draw/?count=${state.playerTwoPile.length}`)).json();
-            //     console.log(pilesDraw);
-            //     state.playerTwoDeck = state.playerTwoDeck.concat(pilesDraw.cards);
-
-            //     // state.playerTwoDeck = [...state.playerTwoDeck, ...pilesDraw.cards];
-            //     state.playerTwoPile=[];
-                
-            //     console.log(state.playerTwoDeck);
-            //     console.log(state.playerTwoPile);
-            // }
 
         };
 
+
+        const winnerLog = () =>{
+            if (state.playerOneDeck.length + state.playerOnePile.length === 0 ){
+                let style = document.createElement('style');
+                style.innerHTML = `
+                    .winner h1{
+                        display:block;
+                    }
+                `;
+                document.head.appendChild(style);
+              
+
+                document.querySelector('.winner__header').innerHTML = "Player Two won!"
+                document.querySelector(`.war__button`).disabled = true;
+
+            } else if (state.playerTwoDeck.length + state.playerTwoPile.length === 0 ){
+                let style = document.createElement('style');
+                style.innerHTML = `
+                    .winner h1{
+                        display:block;
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                document.querySelector('.winner__header').innerHTML = "Player One won!" 
+                document.querySelector(`.war__button`).disabled = true;
+            }
+        }
+        
         document.querySelector(`.war__button`).addEventListener('click', () =>{
             //i only did this to trigger the if function
             let el1 = document.querySelector(`.card--1`);
@@ -314,15 +377,27 @@ const playWar = async () => {
 
                 dummy();
 
+
+               
+
+
+
+                if (state.playerOneDeck < 52 || state.playerTwoDeck < 52){
+                    pileToDeck();
+                }
+            
                 
                
             } else {
 
                 dummy();
             
-
             }
+
+            winnerLog();
         });
+
+        
 
     
     } catch (error){
